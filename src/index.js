@@ -4,7 +4,8 @@ import {
   readFile,
   getPdfFromFile,
   getImageFromPdfPage,
-  getSvgFromPdfPage
+  getSvgFromPdfPage,
+  getImageCropFromPdfPage
 } from './pdf-util';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -16,7 +17,7 @@ function App() {
     unit: '%',
     width: 30
   });
-  const svg = useRef();
+  const pageRef = useRef();
 
   const handleFileChange = e => {
     setFile(e.target.files[0]);
@@ -28,10 +29,17 @@ function App() {
       .then(fileArr => getPdfFromFile(fileArr))
       .then(pdf => pdf.getPage(1))
       .then(page => {
+        pageRef.current = page;
         getImageFromPdfPage(page).then(image => setSrc(image));
-        getSvgFromPdfPage(page).then(svg => console.log({ svg }));
       });
   }, [file]);
+
+  const handleComplete = (px, pct) => {
+    if (!pageRef.current) return;
+    getImageCropFromPdfPage(pageRef.current, pct).then(croppedImg => {
+      // OCR the cropped image
+    });
+  };
 
   return (
     <div
@@ -52,7 +60,7 @@ function App() {
           src={src}
           crop={crop}
           onImageLoaded={() => {}}
-          onComplete={a => console.log({ a })}
+          onComplete={handleComplete}
           onChange={crop => setCrop(crop)}
         />
       )}

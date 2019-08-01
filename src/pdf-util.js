@@ -55,6 +55,56 @@ export async function getImageFromPdfPage(page, scaleArg) {
   });
 }
 
+export async function getImageCropFromPdfPage(page, { x, y, width, height }) {
+  // get width and height dimensions from page
+  const [, , w, h] = page.view;
+  // get scale based on max length
+  const scale = 10;
+  const viewport = page.getViewport(scale);
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+  canvas.height = viewport.height;
+  canvas.width = viewport.width;
+
+  const renderContext = {
+    canvasContext: context,
+    viewport
+  };
+
+  await page.render(renderContext);
+
+  const cropCanvas = document.createElement('canvas');
+  cropCanvas.width = (width / 100) * canvas.width;
+  cropCanvas.height = (height / 100) * canvas.height;
+
+  const ctx = cropCanvas.getContext('2d');
+  ctx.drawImage(
+    canvas,
+    (x / 100) * canvas.width,
+    (y / 100) * canvas.height,
+    (width / 100) * canvas.width,
+    (height / 100) * canvas.height,
+    0,
+    0,
+    ctx.canvas.width,
+    ctx.canvas.height
+  );
+  return cropCanvas.toDataURL();
+
+  //  return new Promise((resolve, reject) => {
+  //    canvas.toBlob(blob => {
+  //      if (!blob) {
+  //        //reject(new Error('Canvas is empty'));
+  //        console.error('Canvas is empty');
+  //        return;
+  //      }
+  //      blob.name = 'Diagram';
+  //      const fileUrl = window.URL.createObjectURL(blob);
+  //      resolve(fileUrl);
+  //    }, 'image/jpeg');
+  //  });
+}
+
 // export async function getSvgFromPdfPage(page) {
 //   const viewport = page.getViewport(1.0);
 //   const svgGfx = new pdfjs.SVGGraphics(page.commonObjs, page.objs);
