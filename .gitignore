@@ -4,3 +4,4 @@ dist
 .env
 *-*-*.json
 .DS_Store
+temp

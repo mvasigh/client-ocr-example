@@ -59,7 +59,7 @@ export async function getImageCropFromPdfPage(page, { x, y, width, height }) {
   // get width and height dimensions from page
   const [, , w, h] = page.view;
   // get scale based on max length
-  const scale = 10;
+  const scale = 15;
   const viewport = page.getViewport(scale);
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
