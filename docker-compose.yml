@@ -4,7 +4,6 @@ services:
   client:
     build:
       context: ./client
-      dockerfile: Dockerfile.dev
       args: 
         CLIENT_BACKEND_URL: $CLIENT_BACKEND_URL
     environment:
@@ -13,4 +12,11 @@ services:
       - /usr/src/app/node_modules
       - ./client:/usr/src/app
     ports:
-      - "3000:1234"
+      - "3000:80"
+  server:
+    build:
+      context: ./server
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS
+    ports: 
+      - "5000:5000"
