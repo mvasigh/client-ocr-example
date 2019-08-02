@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+      args: 
+        CLIENT_BACKEND_URL: $CLIENT_BACKEND_URL
+    environment:
+      - CLIENT_BACKEND_URL=http://localhost:5000/api
+    volumes:
+      - /usr/src/app/node_modules
+      - ./client:/usr/src/app
+    ports:
+      - "3000:1234"
