@@ -9,10 +9,14 @@ import {
 } from './pdf-util';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
+import { TesseractWorker } from 'tesseract.js';
+
+const worker = new TesseractWorker();
 
 function App() {
   const [file, setFile] = useState();
   const [src, setSrc] = useState();
+  const [croppedSrc, setCroppedSrc] = useState();
   const [crop, setCrop] = useState({
     unit: '%',
     width: 30
@@ -36,8 +40,17 @@ function App() {
 
   const handleComplete = (px, pct) => {
     if (!pageRef.current) return;
+    if (!pct.width || !pct.height) return;
     getImageCropFromPdfPage(pageRef.current, pct).then(croppedImg => {
-      // OCR the cropped image
+      setCroppedSrc(croppedImg)
+      worker
+        .recognize(croppedImg)
+        .progress(progress => {
+          console.log('progress', progress);
+        })
+        .then(result => {
+          console.log('result', result);
+        });
     });
   };
 
@@ -52,6 +65,9 @@ function App() {
       <form>
         <input type="file" onChange={handleFileChange}></input>
       </form>
+      {croppedSrc && (
+        <img src={croppedSrc} alt="Cropped Image" />
+      )}
       {src && (
         <ReactCrop
           style={{

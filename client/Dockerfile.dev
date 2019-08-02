@@ -1,0 +1,10 @@
+FROM node:alpine
+
+ARG CLIENT_BACKEND_URL
+ENV CLIENT_BACKEND_URL $CLIENT_BACKEND_URL
+
+WORKDIR /usr/src/app
+COPY ./package.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "dev"]
