@@ -18,7 +18,7 @@ const CLIENT_BACKEND_URL = process.env.CLIENT_BACKEND_URL || '/api';
 function fetchOcrResults(imageUri) {
   return axios
     .post(`${CLIENT_BACKEND_URL}/ocr`, { imageUri })
-    .then(({ data }) => data);
+    .then(({ data }) => console.log(data) || data);
 }
 
 function transformGoogleResults(results) {
