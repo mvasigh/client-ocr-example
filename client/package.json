@@ -10,7 +10,7 @@
   "author": "Mehdi Vasigh <mehdi.vasigh@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "pdfjs-dist": "^2.1.266",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
